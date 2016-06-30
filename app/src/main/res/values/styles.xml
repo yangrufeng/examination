@@ -8,4 +8,26 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="background">
+        <item name="android:background">#f6f5fa</item>
+    </style>
+
+    <style name="itemBackground">
+        <item name="android:background">#FFF</item>
+    </style>
+
+
+    <style name="mypopwindow_anim_style">
+        <item name="android:windowEnterAnimation">@anim/dync_out_to_left</item>
+        <item name="android:windowExitAnimation">@anim/dync_in_from_right</item>
+    </style>
 </resources>
