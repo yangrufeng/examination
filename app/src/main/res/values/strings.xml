@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Examination</string>
+    <string name="submit">作答</string>
     <string name="title_activity_base">BaseActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hint">提示</string>
+    <string name="submit_title">确定</string>
+    <string name="cancel">取消</string>
 </resources>

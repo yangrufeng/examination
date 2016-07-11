@@ -8,6 +8,15 @@ public class Qid {
     private String parentId;
     private String id;
     private boolean isFinished;
+    private String answerId;
+
+    public String getAnswerId() {
+        return answerId;
+    }
+
+    public void setAnswerId(String answerId) {
+        this.answerId = answerId;
+    }
 
     public String getParentId() {
         return parentId;

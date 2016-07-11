@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import org.chm.bean.Qid;
 
+import org.chm.common.Common;
 import org.chm.dummy.DummyData;
 import org.chm.examination.R;
 
@@ -26,7 +27,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //    private ImageLoader imageLoader ;//异步加载图片
 //    private RecyclerView recyclerView;
     private Context context;
-
     public RecyclerViewAdapter(Context context, RecyclerView recyclerView){
         this.goodsBeanList = new ArrayList<>();
         this.context = context;
@@ -87,14 +87,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //        }else{
 //            imageView.setImageDrawable(context.getDrawable(R.drawable.loading));
 //        }
-        holder.textView.setTag(position);
+        holder.itemView.setTag(R.id.tag_qid_id, goodsBean.getId());
+        holder.itemView.setTag(R.id.tag_qid_answer_id, goodsBean.getAnswerId());
         holder.textView.setText(goodsBean.getId());
         if (goodsBean.isFinished()) {
             holder.textView.setBackgroundColor(this.context.getResources().getColor(R.color.grassGreen));
         } else {
             holder.textView.setBackgroundColor(this.context.getResources().getColor(R.color.whiteGray));
         }
-        System.out.println("text:"+position+"*****isFinished:"+goodsBean.isFinished());
         //如果设置了回调，则设置点击事件
         if (mOnItemClickLitener != null)
         {

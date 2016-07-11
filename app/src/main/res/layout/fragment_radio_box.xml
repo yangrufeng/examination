@@ -1,0 +1,39 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="org.chm.fragment.RadioBoxFragment">
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp">
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <RadioButton
+                android:id="@+id/answer1"
+                android:tag="1"
+                android:layout_marginTop="250dp"
+                style="@style/CustomRadioButtonTheme"/>
+            <RadioButton
+                android:id="@+id/answer2"
+                android:tag="2"
+                android:layout_marginTop="20dp"
+                style="@style/CustomRadioButtonTheme"/>
+            <RadioButton
+                android:id="@+id/answer3"
+                android:tag="3"
+                android:layout_marginTop="20dp"
+                style="@style/CustomRadioButtonTheme"/>
+
+            <RadioButton
+                android:id="@+id/answer4"
+                android:tag="4"
+                android:layout_marginTop="20dp"
+                style="@style/CustomRadioButtonTheme"/>
+        </RadioGroup>
+    </RelativeLayout>
+
+</FrameLayout>
