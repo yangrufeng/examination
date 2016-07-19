@@ -6,6 +6,24 @@ package org.chm.bean;
 public class Answer {
     private String id;
 
+    public String getRightAns() {
+        return rightAns;
+    }
+
+    public void setRightAns(String rightAns) {
+        this.rightAns = rightAns;
+    }
+
+    private String rightAns;
+
+    public String getAns() {
+        return ans;
+    }
+
+    public void setAns(String ans) {
+        this.ans = ans;
+    }
+
     public String getAns1() {
         return ans1;
     }
@@ -55,6 +73,7 @@ public class Answer {
     }
 
     private String type;
+    private String ans;
     private String ans1;
     private String ans2;
     private String ans3;

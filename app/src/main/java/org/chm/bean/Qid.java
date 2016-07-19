@@ -5,6 +5,7 @@ package org.chm.bean;
  * Created by pc on 2016/6/29.
  */
 public class Qid {
+
     private String parentId;
     private String id;
     private boolean isFinished;

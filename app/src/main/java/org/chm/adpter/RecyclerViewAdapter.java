@@ -9,9 +9,8 @@ import android.widget.TextView;
 
 import org.chm.bean.Qid;
 
-import org.chm.common.Common;
 import org.chm.dummy.DummyData;
-import org.chm.examination.R;
+import org.chm.R;
 
 import java.util.ArrayList;
 import java.util.List;

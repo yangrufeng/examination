@@ -2,9 +2,12 @@ package org.chm.view;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
@@ -12,6 +15,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.Gravity;
@@ -37,13 +42,19 @@ import org.chm.bean.Answer;
 import org.chm.bean.Qid;
 import org.chm.bean.Question;
 import org.chm.common.Common;
+import org.chm.common.FileUtils;
 import org.chm.common.MyAlertDialog;
 import org.chm.dummy.DummyData;
-import org.chm.examination.R;
+import org.chm.R;
+import org.chm.excel.AnswerExcel;
+import org.chm.excel.QuestionExcel;
 import org.chm.fragment.CheckBoxFragment;
 import org.chm.fragment.QuestionFragment;
 import org.chm.fragment.RadioBoxFragment;
 import org.chm.popupwindow.NavPopupWindow;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends BaseActivity implements BaseFragment.OnFragmentInteractionListener {
     final int RIGHT = 0;
@@ -53,9 +64,12 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnFragmen
     private PopupWindow mNavPopupWindow;
     private GestureDetector gestureDetector;
     private View bottom;
+    private SharedPreferences sp;
     private static int ANIM_TYPE_TOP_TO_BOTTOM = 1;
     private static int ANIM_TYPE_BOTTOM_TO_TOP = 2;
     private static int ANIM_TYPE_FADE = 3;
+    private static final int CREATE_FOLDER_SUCCESS = 0;
+    private static final int CREATE_FOLDER_FAILED = -1;
 
     public final static int DISTANT = 200;
     /**
@@ -104,11 +118,36 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnFragmen
         }
         return true;
     }
-
+    private Handler handler = new Handler() {
+        @Override
+        // 当有消息发送出来的时候就执行Handler的这个方法
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case CREATE_FOLDER_SUCCESS:
+                    loadExcel();
+                    break;
+                case CREATE_FOLDER_FAILED:
+                    throw new RuntimeException("创建目录失败!");
+                default:
+                    throw new IllegalArgumentException("数据无效！");
+            }
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        sp = this.getSharedPreferences("tk", Context.MODE_PRIVATE);
+
+        new Thread() {
+            @Override
+            public void run() {
+                FileUtils.createSDCardDir(Common.QUESTION_FOLDER);
+                handler.sendEmptyMessage(CREATE_FOLDER_SUCCESS);
+            }
+        }.start();
+
+
         gestureDetector = new GestureDetector(this, onGestureListener);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -133,7 +172,73 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnFragmen
             });
             bottom.setVisibility(View.GONE);
         }
+        DummyData.setContentResolver(this.getContentResolver());
+    }
 
+    private void loadExcel() {
+        /*
+         * 已存在题库不需重新加载
+         */
+        if ("信息技术题库".equals(sp.getString("QUESTION_BANK", ""))) {
+            return;
+        }
+        Uri uri;
+        long rowNum = 0;
+        List<Question> qList = QuestionExcel.readExcel_("test.xls");
+        List<Answer> aList = AnswerExcel.readExcel_("test.xls");
+        if (qList.size() != aList.size() || qList.isEmpty() || aList.isEmpty()) {
+            System.out.println("问题列表长度："+qList.size());
+            System.out.println("答案列表长度："+aList.size());
+            throw new IllegalArgumentException("题库数据破损！"+aList.size());
+        }
+        List<Qid> qidList = new ArrayList<>();
+        for (int i = 0; i < qList.size(); i++) {
+            Qid qid = new Qid();
+            qid.setId(qList.get(i).getId());
+            qid.setAnswerId(aList.get(i).getId());
+            qid.setFinished(false);
+            qid.setParentId("0"); // 题库ID，暂时只有一个题库
+            qidList.add(qid);
+        }
+        ContentResolver resolver = this.getContentResolver();
+        for (Question q : qList) {
+            ContentValues values = new ContentValues();
+            values.put("id", q.getId());
+            values.put("text", q.getText());
+            values.put("type", q.getType());
+            uri = resolver.insert(Uri.parse("content://org.chm.provider.myprovider/question"), values);
+            rowNum = ContentUris.parseId(uri);
+            if (rowNum == -1) {
+                throw new RuntimeException("插入数据失败！");
+            }
+        }
+        for (Answer a : aList) {
+            ContentValues values = new ContentValues();
+            values.put("id", a.getId());
+            values.put("type", a.getType());
+            values.put("ans1", a.getAns1());
+            values.put("ans2", a.getAns2());
+            values.put("ans3", a.getAns3());
+            values.put("ans4", a.getAns4());
+            uri = resolver.insert(Uri.parse("content://org.chm.provider.myprovider/answer"), values);
+            rowNum = ContentUris.parseId(uri);
+            if (rowNum == -1) {
+                throw new RuntimeException("插入数据失败！");
+            }
+        }
+        for (Qid qid : qidList) {
+            ContentValues values = new ContentValues();
+            values.put("id", qid.getId());
+            values.put("answerId", qid.getAnswerId());
+            values.put("parentId", qid.getParentId());
+            values.put("isFinished", qid.isFinished());
+            uri = resolver.insert(Uri.parse("content://org.chm.provider.myprovider/qid"), values);
+            rowNum = ContentUris.parseId(uri);
+            if (rowNum == -1) {
+                throw new RuntimeException("插入数据失败！");
+            }
+        }
+        sp.edit().putString("QUESTION_BANK", "信息技术题库").apply();
     }
 
     @Override
@@ -190,11 +295,17 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnFragmen
                 break;
             case UP:
                 System.out.println("go up");
+                if (null != mNavPopupWindow && mNavPopupWindow.isShowing()) {
+                    return;
+                }
                 Qid previous = DummyData.getPrevious();
                 showUI(previous.getId(), previous.getAnswerId(), ANIM_TYPE_TOP_TO_BOTTOM);
                 break;
             case DOWN:
                 System.out.println("go down");
+                if (null != mNavPopupWindow && mNavPopupWindow.isShowing()) {
+                    return;
+                }
                 Qid next = DummyData.getNext();
                 showUI(next.getId(), next.getAnswerId(), ANIM_TYPE_BOTTOM_TO_TOP);
                 break;
@@ -216,8 +327,10 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnFragmen
             @Override
             public void onItemClick(View view, int position) {
                 showUI(view.getTag(R.id.tag_qid_id).toString(), view.getTag(R.id.tag_qid_answer_id).toString(), ANIM_TYPE_FADE);
+                DummyData.setCurrentIndex(Integer.parseInt(view.getTag(R.id.tag_qid_id).toString()));
             }
         });
+
 		/*
 		 * 获取屏幕分辨率
 		 */
@@ -315,6 +428,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnFragmen
         if (uri.getPath().contains("answer")) {
              DummyData.setCurrentQuestionAnswer(ContentUris.parseId(uri)+"");
         }
+
     }
 
     class SpaceItem extends RecyclerView.ItemDecoration {

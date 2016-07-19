@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.chm.base.BaseFragment;
-import org.chm.examination.R;
+import org.chm.R;
 
 /**
  * A simple {@link Fragment} subclass.

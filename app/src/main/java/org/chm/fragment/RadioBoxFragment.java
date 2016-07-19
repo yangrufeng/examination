@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -15,7 +16,7 @@ import android.widget.RadioGroup;
 import org.chm.base.BaseFragment;
 import org.chm.bean.Answer;
 import org.chm.dummy.DummyData;
-import org.chm.examination.R;
+import org.chm.R;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +35,11 @@ public class RadioBoxFragment extends BaseFragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private final int A = 1;
+    private final int B = 2;
+    private final int C = 3;
+    private final int D = 4;
 
     private OnFragmentInteractionListener mListener;
 
@@ -66,6 +72,7 @@ public class RadioBoxFragment extends BaseFragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mListener = (OnFragmentInteractionListener)this.getActivity();
     }
 
     @Override
@@ -78,6 +85,26 @@ public class RadioBoxFragment extends BaseFragment {
         RadioButton a2 = (RadioButton)view.findViewById(R.id.answer2);
         RadioButton a3 = (RadioButton)view.findViewById(R.id.answer3);
         RadioButton a4 = (RadioButton)view.findViewById(R.id.answer4);
+        if (null != a.getAns()) {
+            switch (Integer.parseInt(a.getAns())) {
+                case A:
+                    a1.setChecked(true);
+                    break;
+                case B:
+                    a2.setChecked(true);
+                    break;
+                case C:
+                    a3.setChecked(true);
+                    break;
+                case D:
+                    a4.setChecked(true);
+                    break;
+                default:
+                    break;
+
+            }
+        }
+
         a1.setText(a.getAns1());
         a1.setTag(R.id.tag_answer_num, 1);
 

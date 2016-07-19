@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.chm.examination.R;
+import org.chm.R;
 
 public class MyAlertDialog extends Dialog {
 

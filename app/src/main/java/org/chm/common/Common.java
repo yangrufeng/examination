@@ -7,4 +7,6 @@ public class Common {
     public static String Q_TYPE_SINGLE = "Single Choice";
     public static String Q_TYPE_MULTIPLE = "Multiple Choice";
     public static String Q_TYPE_JUDGE = "True or False";
+    public static String MAIN_FOLDER = "/examination";
+    public static String QUESTION_FOLDER = "/Question";
 }

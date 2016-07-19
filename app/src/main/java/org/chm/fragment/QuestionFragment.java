@@ -15,7 +15,7 @@ import org.chm.base.BaseFragment;
 import org.chm.bean.Question;
 import org.chm.common.Common;
 import org.chm.dummy.DummyData;
-import org.chm.examination.R;
+import org.chm.R;
 
 /**
  * A simple {@link Fragment} subclass.

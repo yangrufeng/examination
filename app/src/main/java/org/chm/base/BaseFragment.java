@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.app.Fragment;
-import org.chm.examination.R;
+import org.chm.R;
 
 /**
  * A simple {@link Fragment} subclass.

@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import org.chm.examination.R;
+import org.chm.R;
 
 public class BaseActivity extends AppCompatActivity {
 
