@@ -88,11 +88,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //        }
         holder.itemView.setTag(R.id.tag_qid_id, goodsBean.getId());
         holder.itemView.setTag(R.id.tag_qid_answer_id, goodsBean.getAnswerId());
-        holder.textView.setText(goodsBean.getId());
+        holder.textView.setText(position+1+"");//防止index信息被当做resource
         if (goodsBean.isFinished()) {
-            holder.textView.setBackgroundColor(this.context.getResources().getColor(R.color.grassGreen));
+            if (goodsBean.getId().equals(DummyData.getCurrentQuestionId())) {
+                holder.textView.setBackgroundResource(R.drawable.textview_border_selected_finished);
+            } else {
+                holder.textView.setBackgroundResource(R.drawable.textview_border_normal_finished);
+            }
+            //holder.textView.setBackgroundColor(this.context.getResources().getColor(R.color.grassGreen));
         } else {
-            holder.textView.setBackgroundColor(this.context.getResources().getColor(R.color.whiteGray));
+            if (goodsBean.getId().equals(DummyData.getCurrentQuestionId())) {
+                System.out.println("aaaaaaaaaaaaaaa"+holder.textView.getText());
+                holder.textView.setBackgroundResource(R.drawable.textview_border_selected);
+            } else {
+                holder.textView.setBackgroundResource(R.drawable.textview_border_normal);
+            }
+            //holder.textView.setBackgroundColor(this.context.getResources().getColor(R.color.whiteGray));
         }
         //如果设置了回调，则设置点击事件
         if (mOnItemClickLitener != null)

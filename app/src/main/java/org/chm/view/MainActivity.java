@@ -158,16 +158,20 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnFragmen
             up.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Qid previous = DummyData.getPrevious();
-                    showUI(previous.getId(), previous.getAnswerId(), ANIM_TYPE_TOP_TO_BOTTOM);
+                    if (DummyData.isInitalization()) {
+                        Qid previous = DummyData.getPrevious();
+                        showUI(previous.getId(), previous.getAnswerId(), ANIM_TYPE_TOP_TO_BOTTOM);
+                    }
                 }
             });
             ImageView down = (ImageView)bottom.findViewById(R.id.btn_down);
             down.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Qid next = DummyData.getNext();
-                    showUI(next.getId(), next.getAnswerId(), ANIM_TYPE_BOTTOM_TO_TOP);
+                    if (DummyData.isInitalization()) {
+                        Qid next = DummyData.getNext();
+                        showUI(next.getId(), next.getAnswerId(), ANIM_TYPE_BOTTOM_TO_TOP);
+                    }
                 }
             });
             bottom.setVisibility(View.GONE);
@@ -298,16 +302,21 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnFragmen
                 if (null != mNavPopupWindow && mNavPopupWindow.isShowing()) {
                     return;
                 }
-                Qid previous = DummyData.getPrevious();
-                showUI(previous.getId(), previous.getAnswerId(), ANIM_TYPE_TOP_TO_BOTTOM);
+                if (DummyData.isInitalization()) {
+                    Qid previous = DummyData.getPrevious();
+                    showUI(previous.getId(), previous.getAnswerId(), ANIM_TYPE_TOP_TO_BOTTOM);
+                }
                 break;
             case DOWN:
                 System.out.println("go down");
                 if (null != mNavPopupWindow && mNavPopupWindow.isShowing()) {
                     return;
                 }
-                Qid next = DummyData.getNext();
-                showUI(next.getId(), next.getAnswerId(), ANIM_TYPE_BOTTOM_TO_TOP);
+                if (DummyData.isInitalization()) {
+                    Qid next = DummyData.getNext();
+                    showUI(next.getId(), next.getAnswerId(), ANIM_TYPE_BOTTOM_TO_TOP);
+                }
+
                 break;
         }
     }
@@ -327,7 +336,8 @@ public class MainActivity extends BaseActivity implements BaseFragment.OnFragmen
             @Override
             public void onItemClick(View view, int position) {
                 showUI(view.getTag(R.id.tag_qid_id).toString(), view.getTag(R.id.tag_qid_answer_id).toString(), ANIM_TYPE_FADE);
-                DummyData.setCurrentIndex(Integer.parseInt(view.getTag(R.id.tag_qid_id).toString()));
+                System.out.println("bbbbbbbbbbbbb"+position);
+                DummyData.setCurrentIndex(position);
             }
         });
 
